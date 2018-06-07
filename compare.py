@@ -1,13 +1,11 @@
 from utils import *
 
-label_w = 5
-label_h = 5
-
-def compare( imgs, results, thresh=0.4, verbose=False ):
+def compare( imgs, results, thresh=0.4, label_size=(7,7), verbose=False ):
     data = {}
     count = 0
     n = 0
     m = 0
+    label_w, label_h = label_size
     for u, labels in enumerate(imgs):
         n += len(labels)
         if verbose:
@@ -46,8 +44,12 @@ def compare( imgs, results, thresh=0.4, verbose=False ):
 
     # STATSTICS
 
-    sensitivity = count / n
-    precision = count / m
+    if count > 0:
+        sensitivity = count / n
+        precision = count / m
+    else:
+        sensitivity = -1
+        precision = -1
 
     overall_iou = 0
     overall_dist = 0
@@ -57,8 +59,9 @@ def compare( imgs, results, thresh=0.4, verbose=False ):
         overall_iou += val[0]
         overall_dist += val[1]
 
-    overall_iou /= count
-    overall_dist /= count
+    if count > 0:
+        overall_iou /= count
+        overall_dist /= count
 
     stats = ( sensitivity, precision, overall_iou, overall_dist )
     return data, stats
