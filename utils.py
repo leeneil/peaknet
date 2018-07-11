@@ -184,3 +184,13 @@ def IOU( x1, y1, w1, h1, x2, y2, w2, h2):
 
 def distance( x1, y1, x2, y2 ):
     return sqrt( (x1-x2)**2 + (y1-y2)**2 )
+
+
+def convert_peaks_to_cheetah(s, r, c) :
+    """Converts psana seg, row, col assuming (32,185,388)
+       to cheetah 2-d table row and col (8*185, 4*388)
+    """
+    segs, rows, cols = (32,185,388)
+    row2d = (int(s)%8) * rows + int(r) # where s%8 is a segment in quad number [0,7]
+    col2d = (int(s)/8) * cols + int(c) # where s/8 is a quad number [0,3]
+    return row2d, col2d
